@@ -25,8 +25,13 @@ def handler(event, context):
     for tracking_number in TRACKING_NUMBERS:
         print(tracking_number)
         url = ENDPOINT + tracking_number
-        response = requests.get(url)
-        response_json = response.json()
+        print(url)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36',
+        }
+        response = requests.get(url, headers=headers)
+        print(response.content)
+        response_json = json.loads(response.content)
         print(response_json)
 
         activities = response_json["trackingDetailBean"]["activityList"]
@@ -41,17 +46,21 @@ def handler(event, context):
 
         delta = now - last_update
 
-        if delta.minute > 55:
+        print(delta.minute)
+
+        if delta.minute > 43:
             updated_responses.append(response_json)
 
     print(updated_responses)
-    notify(updated_responses)
+
+    if len(updated_responses) > 0:
+        notify(updated_responses)
 
 
 def notify(content):
     client = boto3.client('sns')
     response = client.publish(
-        TopicArn='arn:aws:sns:us-east-1:692594597524:WestElmShippingNotifications:bbedad87-1725-4b55-a180-6a3fb1c35b1a',
+        TopicArn='arn:aws:sns:us-east-1:692594597524:WestElmShipmentNotifications',
         Message=json.dump(content),
         Subject='West Elm Shipping Notification',
         MessageStructure='string',
@@ -64,10 +73,10 @@ def time_string_to_datetime(time_string):
         "([A-Za-z]+)\. ([0-9]{1,2}), ([0-9]{4}) ([0-9]{1,2}):([0-9]{2}) (AM|PM)",
         time_string)
     month = abbreviation_to_month(result.group(1))
-    day = result.group(2)
-    year = result.group(3)
-    hour = result.group(4)
-    minute = result.group(5)
+    day = int(result.group(2))
+    year = int(result.group(3))
+    hour = int(result.group(4))
+    minute = int(result.group(5))
     am_pm = result.group(6)
 
     if am_pm == "PM":
@@ -78,7 +87,7 @@ def time_string_to_datetime(time_string):
 
 def abbreviation_to_month(abbreviation):
     if abbreviation == "Oct":
-        return "10"
+        return 10
     if abbreviation == "Nov":
-        return "11"
+        return 11
     raise NotImplementedError

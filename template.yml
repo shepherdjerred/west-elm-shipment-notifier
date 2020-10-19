@@ -1,4 +1,4 @@
-WSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An AWS Serverless Specification template describing your function.
 Resources:
@@ -22,7 +22,7 @@ Resources:
         ScheduleEventSource:
           Type: Schedule
           Properties:
-            Schedule: "cron(*/60 * * * ? *)"
+            Schedule: "cron(*/45 * * * ? *)"
   FailureAlarm:
     Type: "AWS::CloudWatch::Alarm"
     Properties:
@@ -46,7 +46,7 @@ Resources:
   AlertSnsTopic:
     Type: "AWS::SNS::Topic"
     Properties:
-      TopicName: "SkillCappedFetcherNotifications"
+      TopicName: "WestElmShipmentNotifications"
       Subscription:
         -
           Endpoint: "shepherdjerred@gmail.com"
