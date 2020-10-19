@@ -110,4 +110,5 @@ def abbreviation_to_month(abbreviation):
     raise NotImplementedError
 
 
-handler(None, None)
+if __name__ == "__main__":
+    handler(None, None)
