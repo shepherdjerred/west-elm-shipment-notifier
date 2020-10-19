@@ -22,10 +22,9 @@ ENDPOINT = "https://www.westelm.com/customer-service/order-tracking/index.json?c
 
 def handler(event, context):
     updated_responses = []
+    last_updates = []
     for tracking_number in TRACKING_NUMBERS:
-        print(tracking_number)
         url = ENDPOINT + tracking_number
-        print(url)
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36',
         }
@@ -42,16 +41,20 @@ def handler(event, context):
         sorted_activity_times = sorted(activity_times)
 
         last_update = sorted_activity_times[-1]
+        last_updates.append(last_update)
+        print(last_update)
+
         now = datetime.datetime.now()
 
         delta = now - last_update
 
-        print(delta.minute)
+        print(delta)
 
-        if delta.minute > 43:
+        if delta.total_seconds() / 60 < 40:
             updated_responses.append(response_json)
 
-    print(updated_responses)
+    print(f"Last updates: {sorted(last_updates)}")
+    print(f"Updates: {updated_responses}")
 
     if len(updated_responses) > 0:
         notify(updated_responses)
@@ -91,3 +94,5 @@ def abbreviation_to_month(abbreviation):
     if abbreviation == "Nov":
         return 11
     raise NotImplementedError
+
+handler(None, None)
