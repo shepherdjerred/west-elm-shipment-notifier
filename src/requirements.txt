@@ -1,3 +1,5 @@
 datetime==4.3
-boto3==1.15.18
+boto3==1.16.0
 requests
+dataclasses==0.7
+dataclasses-json==0.5.2
