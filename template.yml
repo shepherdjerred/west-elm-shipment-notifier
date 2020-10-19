@@ -31,7 +31,7 @@ Resources:
           Ref: AlertSnsTopic
       ComparisonOperator: "GreaterThanThreshold"
       EvaluationPeriods: 8
-      Period: 21600 # 6 hours
+      Period: 3600 # 1 hour
       Statistic: "Sum"
       Threshold: 1
       Namespace: "AWS/Lambda"
