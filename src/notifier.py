@@ -41,7 +41,7 @@ def handler(event, context):
 
         delta = now - last_update
 
-        if delta.minute > 25:
+        if delta.minute > 55:
             updated_responses.append(response_json)
 
     print(updated_responses)
